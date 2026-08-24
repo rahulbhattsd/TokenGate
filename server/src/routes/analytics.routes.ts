@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { getSummary, getCostTrend, getByModel, getLogs } from '../modules/analytics';
+import { authenticateJWT } from '../middleware/auth';
+const router = Router();
+router.use(authenticateJWT);
+router.get('/summary', getSummary);
+router.get('/cost-trend', getCostTrend);
+router.get('/by-model', getByModel);
+router.get('/logs', getLogs);
+export default router;
