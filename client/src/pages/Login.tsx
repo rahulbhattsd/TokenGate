@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     try {
       const { data } = await api.post('/auth/login', { email, password });
-      setTokens(data.accessToken, data.refreshToken);
+      setTokens(data.accessToken);
       navigate('/');
     } catch (error) {
       console.error(error);

@@ -1,25 +1,23 @@
 import { create } from 'zustand';
+import { api } from '../lib/api';
 
 interface AuthState {
   token: string | null;
-  refreshToken: string | null;
-  setTokens: (token: string | null, refreshToken: string | null) => void;
-  logout: () => void;
+  setTokens: (token: string | null) => void;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem('token'),
-  refreshToken: localStorage.getItem('refreshToken'),
-  setTokens: (token, refreshToken) => {
-    if (token && refreshToken) {
-      localStorage.setItem('token', token);
-      localStorage.setItem('refreshToken', refreshToken);
-    }
-    set({ token, refreshToken });
+  token: null,
+  setTokens: (token) => {
+    set({ token });
   },
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    set({ token: null, refreshToken: null });
+  logout: async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (e) {
+      // ignore
+    }
+    set({ token: null });
   }
 }));

@@ -35,7 +35,7 @@ TokenGate is an LLM cost gateway and token minimizer built using Node.js, Expres
 | `JWT_SECRET` | Secret for signing access tokens |
 | `JWT_REFRESH_SECRET` | Secret for signing refresh tokens |
 | `CACHE_SIMILARITY_THRESHOLD` | Semantic search threshold (default 0.95) |
-| `OPENAI_API_KEY` | OpenAI API Key |
+| `OPENAI_API_KEY` | OpenAI API Key (Required for semantic caching even if using other providers for completion) |
 | `ANTHROPIC_API_KEY` | Anthropic API Key |
 | `GEMINI_API_KEY` | Gemini API Key |
 | `VITE_API_URL` | Frontend link to Backend URL |
