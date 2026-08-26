@@ -7,13 +7,13 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const setToken = useAuthStore((state) => state.setToken);
+  const setTokens = useAuthStore((state) => state.setTokens);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const { data } = await api.post('/auth/signup', { email, password });
-      setToken(data.accessToken);
+      setTokens(data.accessToken, data.refreshToken);
       navigate('/');
     } catch (error) {
       console.error(error);
