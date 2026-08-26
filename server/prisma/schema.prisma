@@ -24,6 +24,7 @@ model ApiKey {
   keyHash    String   @unique
   label      String
   revoked    Boolean  @default(false)
+  spendUsd   Float    @default(0.0)
   requests   RequestLog[]
   cacheEntries CacheEntry[]
   createdAt  DateTime @default(now())
@@ -57,7 +58,8 @@ model CacheEntry {
   hitCount    Int      @default(0)
   apiKeyId    String
   apiKey      ApiKey   @relation(fields: [apiKeyId], references: [id])
+  userId      String   @default("")
   createdAt   DateTime @default(now())
 
-  @@unique([promptHash, apiKeyId])
+  @@unique([promptHash, apiKeyId, userId])
 }

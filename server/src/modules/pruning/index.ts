@@ -1,6 +1,6 @@
 import { Message } from '../providers/types';
 import { countTokens } from '../tokenizer';
-import { getProviderAdapter, pricingTable } from '../providers';
+import { getProviderAdapter, pricingTable, calculateCost } from '../providers';
 import { logRequest } from '../usage';
 
 export const pruneMessages = async (messages: Message[], maxTokens: number, provider: string, model: string, apiKeyId: string) => {
@@ -23,7 +23,7 @@ export const pruneMessages = async (messages: Message[], maxTokens: number, prov
   
   const finalInputTokens = summaryRes.inputTokens || countTokens(summaryPrompt.map(m => m.content).join('\n'), model).count;
   const finalOutputTokens = summaryRes.outputTokens || countTokens(summaryRes.text, model).count;
-  const costUsd = pricingTable[model] ? (finalInputTokens / 1000) * pricingTable[model].input + (finalOutputTokens / 1000) * pricingTable[model].output : 0;
+  const costUsd = calculateCost(model, finalInputTokens, finalOutputTokens);
 
   await logRequest(apiKeyId, provider, model, finalInputTokens, finalOutputTokens, 0, false, latencyMs, costUsd, 'pruning-summary');
 

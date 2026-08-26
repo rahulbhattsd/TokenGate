@@ -13,7 +13,7 @@ export default function Signup() {
     e.preventDefault();
     try {
       const { data } = await api.post('/auth/signup', { email, password });
-      setTokens(data.accessToken, data.refreshToken);
+      setTokens(data.accessToken);
       navigate('/');
     } catch (error) {
       console.error(error);
