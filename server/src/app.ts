@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes';
 import apiKeyRoutes from './routes/apiKeys.routes';
 import proxyRoutes from './routes/proxy.routes';
 import analyticsRoutes from './routes/analytics.routes';
+import knowledgeBaseRoutes from './routes/knowledgeBases.routes';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/auth', authRoutes);
 app.use('/keys', apiKeyRoutes);
 app.use('/v1', proxyRoutes);
 app.use('/analytics', analyticsRoutes);
+app.use('/api/knowledge-bases', knowledgeBaseRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 export default app;

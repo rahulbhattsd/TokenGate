@@ -10,11 +10,12 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  apiKeys   ApiKey[]
-  createdAt DateTime @default(now())
+  id             String          @id @default(uuid())
+  email          String          @unique
+  password       String
+  apiKeys        ApiKey[]
+  knowledgeBases KnowledgeBase[]
+  createdAt      DateTime        @default(now())
 }
 
 model ApiKey {
@@ -31,35 +32,97 @@ model ApiKey {
 }
 
 model RequestLog {
-  id            String   @id @default(uuid())
-  apiKeyId      String
-  apiKey        ApiKey   @relation(fields: [apiKeyId], references: [id])
-  provider      String
-  model         String
-  inputTokens   Int
-  outputTokens  Int
-  tokensSaved   Int      @default(0)
-  cachedHit     Boolean  @default(false)
-  costUsd       Float
-  latencyMs     Int
-  purpose       String?
-  createdAt     DateTime @default(now())
+  id                 String   @id @default(uuid())
+  apiKeyId           String
+  apiKey             ApiKey   @relation(fields: [apiKeyId], references: [id])
+  provider           String
+  model              String
+  inputTokens        Int
+  outputTokens       Int
+  tokensSaved        Int      @default(0)
+  cachedHit          Boolean  @default(false)
+  costUsd            Float
+  latencyMs          Int
+  purpose            String?
+  ragEnabled         Boolean  @default(false)
+  knowledgeBaseId    String?
+  chunksRetrieved    Int      @default(0)
+  chunksUsed         Int      @default(0)
+  ragTokens          Int      @default(0)
+  tokensDiscarded    Int      @default(0)
+  retrievalLatencyMs Int      @default(0)
+  embeddingTokens    Int      @default(0)
+  embeddingCostUsd   Float    @default(0.0)
+  llmCostUsd         Float    @default(0.0)
+  createdAt          DateTime @default(now())
 }
 
 model CacheEntry {
-  id          String                       @id @default(uuid())
-  promptHash  String
-  embedding   Unsupported("vector(1536)")
-  response    String
-  provider    String
-  model       String
-  inputTokens Int      @default(0)
-  outputTokens Int     @default(0)
-  hitCount    Int      @default(0)
-  apiKeyId    String
-  apiKey      ApiKey   @relation(fields: [apiKeyId], references: [id])
-  userId      String   @default("")
-  createdAt   DateTime @default(now())
+  id                   String                     @id @default(uuid())
+  promptHash           String
+  cacheScopeHash       String                     @default("default")
+  embedding            Unsupported("vector(1536)")
+  response             String
+  provider             String
+  model                String
+  inputTokens          Int                        @default(0)
+  outputTokens         Int                        @default(0)
+  hitCount             Int                        @default(0)
+  apiKeyId             String
+  apiKey               ApiKey                     @relation(fields: [apiKeyId], references: [id])
+  userId               String                     @default("")
+  ragEnabled           Boolean                    @default(false)
+  knowledgeBaseId      String?
+  knowledgeBaseVersion Int?
+  ragMetadata          Json?
+  createdAt            DateTime                   @default(now())
 
-  @@unique([promptHash, apiKeyId, userId])
+  @@unique([promptHash, apiKeyId, userId, cacheScopeHash])
+}
+
+model KnowledgeBase {
+  id          String     @id @default(uuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  version     Int        @default(1)
+  documents   Document[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+model Document {
+  id              String          @id @default(uuid())
+  knowledgeBaseId String
+  knowledgeBase   KnowledgeBase   @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  name            String
+  source          String?
+  mimeType        String?
+  contentHash     String?
+  metadata        Json?
+  status          String          @default("pending")
+  errorMessage    String?
+  chunks          DocumentChunk[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([knowledgeBaseId])
+  @@unique([knowledgeBaseId, contentHash])
+}
+
+model DocumentChunk {
+  id         String   @id @default(uuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  content    String
+  chunkIndex Int
+  tokenCount Int      @default(0)
+  metadata   Json?
+  embedding  Unsupported("vector(1536)")
+  createdAt  DateTime @default(now())
+
+  @@index([documentId])
 }

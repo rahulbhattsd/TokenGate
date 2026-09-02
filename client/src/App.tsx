@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ApiKeys from './pages/ApiKeys';
 import Logs from './pages/Logs';
+import KnowledgeBases from './pages/KnowledgeBases';
 import { useAuthStore } from './store/authStore';
 import { api } from './lib/api';
 
@@ -61,6 +62,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Logs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/knowledge-bases"
+          element={
+            <ProtectedRoute>
+              <KnowledgeBases />
             </ProtectedRoute>
           }
         />

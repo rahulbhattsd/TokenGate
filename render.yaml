@@ -20,6 +20,22 @@ services:
         generateValue: true
       - key: CACHE_SIMILARITY_THRESHOLD
         value: "0.95"
+      - key: RAG_EMBEDDING_MODEL
+        value: text-embedding-3-small
+      - key: RAG_CHUNK_SIZE
+        value: "500"
+      - key: RAG_CHUNK_OVERLAP
+        value: "75"
+      - key: RAG_TOP_K
+        value: "5"
+      - key: RAG_SIMILARITY_THRESHOLD
+        value: "0.75"
+      - key: RAG_MAX_CONTEXT_TOKENS
+        value: "2000"
+      - key: RAG_REQUIRE_CONTEXT
+        value: "false"
+      - key: RAG_MAX_FILE_BYTES
+        value: "10485760"
       - key: OPENAI_API_KEY
         sync: false
       - key: ANTHROPIC_API_KEY

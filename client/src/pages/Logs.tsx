@@ -19,6 +19,7 @@ export default function Logs() {
             <th>Tokens (In/Out)</th>
             <th>Cost</th>
             <th>Cached</th>
+            <th>RAG</th>
             <th>Latency</th>
           </tr>
         </thead>
@@ -30,6 +31,7 @@ export default function Logs() {
               <td>{log.inputTokens} / {log.outputTokens}</td>
               <td>${log.costUsd.toFixed(6)}</td>
               <td>{log.cachedHit ? 'Yes' : 'No'}</td>
+              <td>{log.ragEnabled ? `${log.chunksUsed || 0} chunks` : 'No'}</td>
               <td>{log.latencyMs}ms</td>
             </tr>
           ))}

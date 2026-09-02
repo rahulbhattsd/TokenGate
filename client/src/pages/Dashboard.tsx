@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 
@@ -15,10 +16,17 @@ export default function Dashboard() {
 
   return (
     <div className="p-8 space-y-8">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+        <nav className="flex gap-4 text-sm text-blue-600">
+          <Link to="/keys">API Keys</Link>
+          <Link to="/logs">Logs</Link>
+          <Link to="/knowledge-bases">Knowledge Bases</Link>
+        </nav>
+      </div>
       
       {summary && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-7">
           <div className="p-4 border rounded shadow">
             <div className="text-sm text-gray-500">Total Requests</div>
             <div className="text-xl font-bold">{summary.totalRequests}</div>
@@ -34,6 +42,18 @@ export default function Dashboard() {
           <div className="p-4 border rounded shadow">
             <div className="text-sm text-gray-500">Cache Hit Rate</div>
             <div className="text-xl font-bold">{(summary.cacheHitRate * 100).toFixed(2)}%</div>
+          </div>
+          <div className="p-4 border rounded shadow">
+            <div className="text-sm text-gray-500">RAG Requests</div>
+            <div className="text-xl font-bold">{summary.ragRequests || 0}</div>
+          </div>
+          <div className="p-4 border rounded shadow">
+            <div className="text-sm text-gray-500">RAG Tokens</div>
+            <div className="text-xl font-bold">{summary.ragTokens || 0}</div>
+          </div>
+          <div className="p-4 border rounded shadow">
+            <div className="text-sm text-gray-500">Embedding Cost</div>
+            <div className="text-xl font-bold">\${(summary.embeddingCost || 0).toFixed(4)}</div>
           </div>
         </div>
       )}

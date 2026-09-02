@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import prisma from '../config/db';
 
 declare module 'express-serve-static-core' {
-  interface Request { apiKeyId?: string; }
+  interface Request { apiKeyId?: string; apiKeyUserId?: string; }
 }
 
 export const authenticateApiKey = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -15,6 +15,7 @@ export const authenticateApiKey = async (req: Request, res: Response, next: Next
     const apiKey = await prisma.apiKey.findUnique({ where: { keyHash } });
     if (!apiKey || apiKey.revoked) { res.status(401).json({ error: 'Invalid key' }); return; }
     req.apiKeyId = apiKey.id;
+    req.apiKeyUserId = apiKey.userId;
     next();
   } catch (error) { res.status(500).json({ error: 'Error' }); }
 };

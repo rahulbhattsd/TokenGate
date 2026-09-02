@@ -11,7 +11,7 @@ export const getSummary = async (req: Request, res: Response): Promise<void> => 
     const aggregate = await prisma.requestLog.aggregate({
       where: { apiKeyId: { in: keyIds } },
       _count: { id: true },
-      _sum: { costUsd: true, tokensSaved: true },
+      _sum: { costUsd: true, tokensSaved: true, ragTokens: true, embeddingCostUsd: true },
     });
 
     const totalRequests = aggregate._count.id;
@@ -22,8 +22,19 @@ export const getSummary = async (req: Request, res: Response): Promise<void> => 
       where: { apiKeyId: { in: keyIds }, cachedHit: true }
     });
     const cacheHitRate = totalRequests ? cacheHitsCount / totalRequests : 0;
+    const ragRequests = await prisma.requestLog.count({
+      where: { apiKeyId: { in: keyIds }, ragEnabled: true }
+    });
     
-    res.json({ totalRequests, totalCost, tokensSaved, cacheHitRate });
+    res.json({
+      totalRequests,
+      totalCost,
+      tokensSaved,
+      cacheHitRate,
+      ragRequests,
+      ragTokens: aggregate._sum.ragTokens || 0,
+      embeddingCost: aggregate._sum.embeddingCostUsd || 0,
+    });
   } catch (error) {
     logger.error({ err: error }, 'Failed to get summary');
     res.status(500).json({ error: 'Error' });
