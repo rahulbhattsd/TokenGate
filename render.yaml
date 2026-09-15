@@ -36,6 +36,11 @@ services:
         value: "false"
       - key: RAG_MAX_FILE_BYTES
         value: "10485760"
+      - key: ALLOWED_ORIGIN
+        fromService:
+          type: web
+          name: tokengate-client
+          envVarKey: RENDER_EXTERNAL_URL
       - key: OPENAI_API_KEY
         sync: false
       - key: ANTHROPIC_API_KEY

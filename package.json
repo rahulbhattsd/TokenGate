@@ -1,1 +1,14 @@
-{}
+{
+  "name": "tokengate-root",
+  "private": true,
+  "scripts": {
+    "server:dev": "npm run dev --prefix server",
+    "server:build": "npm run build --prefix server",
+    "server:start": "npm run start --prefix server",
+    "client:dev": "npm run dev --prefix client",
+    "client:build": "npm run build --prefix client",
+    "test": "npm run test --prefix server",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  }
+}
