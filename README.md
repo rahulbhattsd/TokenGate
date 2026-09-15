@@ -2,7 +2,10 @@
 # TokenGate
 
 TokenGate is an LLM cost gateway and token minimizer built using Node.js, Express, TypeScript, PostgreSQL (with pgvector), Prisma ORM, Redis, and a React/Vite frontend. It supports multi-provider chat routing, semantic caching, token pruning, usage analytics, and optional retrieval-augmented generation (RAG) inside the existing `/v1/chat/completions` gateway.
+# Architecture
+
 <img width="1273" height="1236" alt="token" src="https://github.com/user-attachments/assets/cb1b4520-67c0-435f-96d4-1967050f095f" />
+
 ## Setup Instructions
 
 1. **Clone the repository:**
